@@ -4,9 +4,9 @@ import numpy as np
 import tqdm
 import os
 
-test_data_folder = '/home/yusuf/Desktop/CS7785/Lab_6/lab6_ws/src/team19_lab6/test_images/'
+test_data_folder = '../test_images/'
 
-model = tensorflow.keras.models.load_model('/home/yusuf/Desktop/CS7785/Lab_6/lab6_ws/src/team19_lab6/keras_model.h5', compile=False)
+model = tensorflow.keras.models.load_model('../keras_model.h5', compile=False)
 
 print(os.listdir(test_data_folder))
 
