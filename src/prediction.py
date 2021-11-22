@@ -51,5 +51,25 @@ print(pred_list)
 
 pred_list = np.asarray(pred_list)
 
-print(pred_list)
+print("\n pred_list : \n", pred_list)
+print("\n pred_list shape: ", pred_list.shape)
 
+
+test_labels_path = '/home/yusuf/Desktop/CS7785/Lab_6/lab6_ws/src/team19_lab6/test.txt'
+
+test_labels = []
+
+with open(test_labels_path, "r") as filestream:
+    for line in filestream:
+        currentline = line.split(",")
+        label = currentline[1]
+        test_labels.append(label)
+
+test_labels = [x[:-1] for x in test_labels]
+
+# print(test_labels)
+
+labels_list = np.asarray(test_labels)
+
+print("\n labels_list : \n", labels_list)
+print("\n labels_list shape: ", labels_list.shape)
