@@ -1,6 +1,6 @@
-0 Random
-1 Left
-2 Right
-3 uTurn
-4 STOP
-5 StarGoal
+0 Class 1
+1 Class 2
+2 Class 3
+3 Class 4
+4 Class 5
+5 Class 0
