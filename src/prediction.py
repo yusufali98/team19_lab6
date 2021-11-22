@@ -8,13 +8,22 @@ test_data_folder = '/home/yusuf/Desktop/CS7785/Lab_6/lab6_ws/src/team19_lab6/tes
 
 model = tensorflow.keras.models.load_model('/home/yusuf/Desktop/CS7785/Lab_6/lab6_ws/src/team19_lab6/keras_model.h5', compile=False)
 
-print(os.listdir(test_data_folder))
-
 idx = 1
 
 pred_list = []
 
-for files in (os.listdir(test_data_folder)):
+file_names = os.listdir(test_data_folder)
+
+file_names = [x[:-4] for x in file_names]
+file_names = [int(x) for x in file_names]
+file_names.sort()
+
+print(file_names)
+
+file_names = [str(x) + '.jpg' for x in file_names]
+print(file_names)
+
+for files in file_names:
 
     fname = test_data_folder + files
 
