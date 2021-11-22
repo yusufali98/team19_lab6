@@ -49,11 +49,10 @@ for files in (os.listdir(test_data_folder)):
 
 print(pred_list)
 
-pred_list = np.asarray(pred_list)
+pred_array = np.asarray(pred_list)
 
-print("\n pred_list : \n", pred_list)
-print("\n pred_list shape: ", pred_list.shape)
-
+print("\n pred_list : \n", pred_array)
+print("\n pred_list shape: ", pred_array.shape)
 
 test_labels_path = '/home/yusuf/Desktop/CS7785/Lab_6/lab6_ws/src/team19_lab6/test.txt'
 
@@ -67,9 +66,25 @@ with open(test_labels_path, "r") as filestream:
 
 test_labels = [x[:-1] for x in test_labels]
 
-# print(test_labels)
+labels_array = np.asarray(test_labels)
 
-labels_list = np.asarray(test_labels)
+print("\n labels_list : \n", labels_array)
+print("\n labels_list shape: ", labels_array.shape)
 
-print("\n labels_list : \n", labels_list)
-print("\n labels_list shape: ", labels_list.shape)
+pred_array = pred_array.astype(int)
+labels_array = labels_array.astype(int)
+
+pred_array = tensorflow.convert_to_tensor(pred_array)
+labels_array = tensorflow.convert_to_tensor(labels_array)
+
+confusion_matrix = tensorflow.math.confusion_matrix(labels_array, pred_array)
+
+print(confusion_matrix)
+
+m = tensorflow.keras.metrics.Accuracy()
+
+m.update_state(y_true = labels_array, y_pred = pred_array)
+
+accuracy = m.result()
+
+print(accuracy)
