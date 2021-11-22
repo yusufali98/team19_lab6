@@ -54,7 +54,7 @@ pred_array = np.asarray(pred_list)
 print("\n pred_list : \n", pred_array)
 print("\n pred_list shape: ", pred_array.shape)
 
-test_labels_path = '/home/yusuf/Desktop/CS7785/Lab_6/lab6_ws/src/team19_lab6/test.txt'
+test_labels_path = '../test.txt'
 
 test_labels = []
 
