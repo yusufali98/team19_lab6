@@ -45,10 +45,10 @@ for files in file_names:
 
     prediction = model.predict(data)
 
-    prediction_idx = np.argmax(prediction) + 1
+    prediction_idx = np.argmax(prediction) # + 1
 
-    if prediction_idx == 6:
-        prediction_idx = 0
+    # if prediction_idx == 6:
+    #     prediction_idx = 0
 
     print("\n Prediction ", fname, " : ", prediction_idx)
 
