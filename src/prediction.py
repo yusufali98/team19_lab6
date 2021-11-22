@@ -3,97 +3,111 @@ from PIL import Image, ImageOps
 import numpy as np
 import tqdm
 import os
+import glob
 
-test_data_folder = '../test_images/'
 
-model = tensorflow.keras.models.load_model('../keras_model.h5', compile=False)
+def evaluate():
 
-idx = 1
+    test_data_folder = '../test_images/'
 
-pred_list = []
+    model = tensorflow.keras.models.load_model('../keras_model.h5', compile=False)
 
-file_names = os.listdir(test_data_folder)
+    idx = 1
 
-file_names = [x[:-4] for x in file_names]
-file_names = [int(x) for x in file_names]
-file_names.sort()
+    pred_list = []
+    file_names = []
 
-print(file_names)
+    os.chdir(test_data_folder)
 
-file_names = [str(x) + '.jpg' for x in file_names]
-print(file_names)
+    for file in glob.glob("*.jpg"):
+        file_names.append(file)
 
-for files in file_names:
+    file_names = [x[:-4] for x in file_names]
+    file_names = [int(x) for x in file_names]
+    file_names.sort()
 
-    fname = test_data_folder + files
+    # print(file_names)
 
-    print(fname)
+    file_names = [str(x) + '.jpg' for x in file_names]
+    # print(file_names)
 
-    data = np.ndarray(shape = (1,224,224,3), dtype = np.float32)
+    for files in file_names:
 
-    image = Image.open(fname)
+        fname = test_data_folder + files
 
-    size = (224,224)
+        # print(fname)
 
-    image = ImageOps.fit(image, size, Image.ANTIALIAS)
+        data = np.ndarray(shape = (1,224,224,3), dtype = np.float32)
 
-    image_array = np.asarray(image)
+        image = Image.open(fname)
 
-    normalized_image_arr = (image_array.astype(np.float32) / 127.0) - 1
+        size = (224,224)
 
-    data[0] = normalized_image_arr
+        image = ImageOps.fit(image, size, Image.ANTIALIAS)
 
-    prediction = model.predict(data)
+        image_array = np.asarray(image)
 
-    prediction_idx = np.argmax(prediction) # + 1
+        normalized_image_arr = (image_array.astype(np.float32) / 127.0) - 1
 
-    # if prediction_idx == 6:
-    #     prediction_idx = 0
+        data[0] = normalized_image_arr
 
-    print("\n Prediction ", fname, " : ", prediction_idx)
+        prediction = model.predict(data)
 
-    pred_list.append(prediction_idx)
+        prediction_idx = np.argmax(prediction) # + 1
 
-    idx += 1
+        # if prediction_idx == 6:
+        #     prediction_idx = 0
 
-print(pred_list)
+        # print("\n Prediction ", fname, " : ", prediction_idx)
 
-pred_array = np.asarray(pred_list)
+        pred_list.append(prediction_idx)
 
-print("\n pred_list : \n", pred_array)
-print("\n pred_list shape: ", pred_array.shape)
+        idx += 1
 
-test_labels_path = '../test.txt'
+    # print(pred_list)
 
-test_labels = []
+    pred_array = np.asarray(pred_list)
 
-with open(test_labels_path, "r") as filestream:
-    for line in filestream:
-        currentline = line.split(",")
-        label = currentline[1]
-        test_labels.append(label)
+    # print("\n pred_list : \n", pred_array)
+    # print("\n pred_list shape: ", pred_array.shape)
 
-test_labels = [x[:-1] for x in test_labels]
+    test_labels_path = '../test_images/test.txt'
 
-labels_array = np.asarray(test_labels)
+    test_labels = []
 
-print("\n labels_list : \n", labels_array)
-print("\n labels_list shape: ", labels_array.shape)
+    with open(test_labels_path, "r") as filestream:
+        for line in filestream:
+            currentline = line.split(",")
+            label = currentline[1]
+            test_labels.append(label)
 
-pred_array = pred_array.astype(int)
-labels_array = labels_array.astype(int)
+    test_labels = [x[:-1] for x in test_labels]
 
-pred_array = tensorflow.convert_to_tensor(pred_array)
-labels_array = tensorflow.convert_to_tensor(labels_array)
+    labels_array = np.asarray(test_labels)
 
-confusion_matrix = tensorflow.math.confusion_matrix(labels_array, pred_array)
+    # print("\n labels_list : \n", labels_array)
+    # print("\n labels_list shape: ", labels_array.shape)
 
-print(confusion_matrix)
+    pred_array = pred_array.astype(int)
+    labels_array = labels_array.astype(int)
 
-m = tensorflow.keras.metrics.Accuracy()
+    pred_array = tensorflow.convert_to_tensor(pred_array)
+    labels_array = tensorflow.convert_to_tensor(labels_array)
 
-m.update_state(y_true = labels_array, y_pred = pred_array)
+    confusion_matrix = tensorflow.math.confusion_matrix(labels_array, pred_array)
 
-accuracy = m.result()
+    print("\n Confusion Matrix: \n")
+    tensorflow.print(confusion_matrix)
 
-print(accuracy)
+    m = tensorflow.keras.metrics.Accuracy()
+
+    m.update_state(y_true = labels_array, y_pred = pred_array)
+
+    accuracy = m.result()
+
+    print("\n Accuracy: \n")
+    tensorflow.print(accuracy)
+
+
+if __name__ == "__main__":
+    evaluate()
